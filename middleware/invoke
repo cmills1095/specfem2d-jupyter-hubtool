@@ -4,6 +4,6 @@
 # jupyter tool
 #
 /usr/bin/invoke_app "$@" -t specfem2d \
-                         -C "start_jupyter -t -T @tool Simple_Specfem2D_Kernel.ipynb" \
+                         -C "start_jupyter -c -t -T @tool Simple_Specfem2D_Kernel.ipynb" \
                          -u anaconda-7 \
                          -r none
