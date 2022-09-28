@@ -3,8 +3,27 @@
 #
 # jupyter tool
 #
+toolName=specfem2d
+toolDirectory=$(dirname $(dirname $(readlink -f $0)))
+
+rm -rf ${RESULTSDIR}/${toolName}
+mkdir -p ${RESULTSDIR}/${toolName}
+
+cp -sRf ${toolDirectory}/*                 ${RESULTSDIR}/${toolName}
+rm -f                                      ${RESULTSDIR}/${toolName}/bin/DATA/Par_file
+cp -f   ${toolDirectory}/bin/DATA/Par_file ${RESULTSDIR}/${toolName}/bin/DATA
+
+mkdir -p ${RESULTSDIR}/${toolName}/bin/specfem2d/bin
+cat > ${RESULTSDIR}/${toolName}/bin/specfem2d/bin/xmeshfem2D << EOF
+#!/bin/sh
+
+exec \$(which \$(basename \$(readlink -f \$0)))
+EOF
+chmod a+x ${RESULTSDIR}/${toolName}/bin/specfem2d/bin/xmeshfem2D
+cp -p     ${RESULTSDIR}/${toolName}/bin/specfem2d/bin/xmeshfem2D ${RESULTSDIR}/${toolName}/bin/specfem2d/bin/xspecfem2D
+
 /usr/bin/invoke_app "$@" -t specfem2d \
-                         -C "start_jupyter -c -t -T @tool Simple_Specfem2D_Kernel.ipynb" \
+                         -C "start_jupyter ${RESULTSDIR}/${toolName}/bin/Simple_Specfem2D_Kernel.ipynb" \
                          -u anaconda-7 \
                          -u specfem2d-604f766101c9ece3d588d61e6275d81d50dd8e65 \
                          -r none
